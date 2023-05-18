@@ -1,0 +1,307 @@
+@import 'reset.css';
+
+/* root */
+:root {
+  /* font */
+  --font-family: 'Montserrat', sans-serif;
+
+  /* dark theme */
+  --fonst-color-dark: #fff;
+  --tablet-bg-dark: #20211b;
+  --tablet-border-color-dark: #454543;
+  --up-numbers-color-dark: #a0a1a1;
+  /* btns */
+  --funcs-bg-col-dark: #313331;
+  --funcs-bg-active-col-dark: #3b3d3a;
+  --numbs-bg-col-dark: #3a3c37;
+  --numbs-bg-active-col-dark: #31332e;
+  --equals-dark: #4cc2ff;
+  --equals-active-dark: #47b1e8;
+
+  /* light theme */
+  --fonst-color-light: #000;
+  --tablet-bg-light: #eff5ef;
+  --tablet-border-color-light: #a6a6a6;
+  --up-numbers-color-light: #5f6263;
+  /* btns */
+  --funcs-bg-col-light: #f6fbf5;
+  --funcs-bg-active-col-light: #f8fbef;
+  --numbs-bg-col-light: #ffffff;
+  --numbs-bg-active-col-light: #fbfdf9;
+  --equals-light: #0067c0;
+  --equals-active-light: #1975c2;
+
+  /* other */
+  --tablet-shadow: rgba(0, 0, 0, .5);
+}
+
+/* wrap styles */
+.wrap {
+  width: 100%;
+  height: 100vh;
+
+  font-family: var(--font-family);
+}
+
+/* theme colors */
+.container.dark {
+  --fonst-color: var(--fonst-color-dark);
+  --tablet-bg: var(--tablet-bg-dark);
+  --tablet-border-color: var(--tablet-border-color-dark);
+  --up-numbers-color: var(--up-numbers-color-dark);
+
+  /* btns */
+  --funcs-bg: var(--funcs-bg-col-dark);
+  --funcs-bg-active: var(--funcs-bg-active-col-dark);
+  --numbs-bg: var(--numbs-bg-col-dark);
+  --numbs-bg-active: var(--numbs-bg-active-col-dark);
+  --equals: var(--equals-dark);
+  --equals-active: var(--equals-active-dark);
+  --equals-font-col: var(--fonst-color-light);
+}
+
+.container.light {
+  --fonst-color: var(--fonst-color-light);
+  --tablet-bg: var(--tablet-bg-light);
+  --tablet-border-color: var(--tablet-border-color-light);
+  --up-numbers-color: var(--up-numbers-color-light);
+
+  /* btns */
+  --funcs-bg: var(--funcs-bg-col-light);
+  --funcs-bg-active: var(--funcs-bg-active-col-light);
+  --numbs-bg: var(--numbs-bg-col-light);
+  --numbs-bg-active: var(--numbs-bg-active-col-light);
+  --equals: var(--equals-light);
+  --equals-active: var(--equals-active-light);
+  --equals-font-col: var(--fonst-color-dark);
+}
+
+/* container styles */
+.container,
+.row,
+.col {
+  height: 100%;
+
+  color: var(--fonst-color);
+}
+
+.row {
+  align-items: center
+}
+
+.col-md-auto {
+  width: 420px;
+  height: 540px;
+}
+
+@media (max-width: 480px) {
+  .col-md-auto {
+    padding: 0 5%;
+
+    width: 100%;
+  }
+
+  .col {
+    display: none;
+  }
+}
+
+/* calculator styles */
+.container-fluid {
+  display: grid;
+  grid-template: 32px 120px 1fr / 1fr;
+
+  padding: 0;
+
+  height: 100%;
+
+  background-color: var(--tablet-bg);
+
+  border: 1px solid var(--tablet-border-color);
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+
+  box-shadow: 0px 0px 12px var(--tablet-shadow);
+
+  cursor: default;
+}
+
+/* top bar styles */
+/* icons */
+.material-symbols-outlined {
+  color: var(--fonst-color);
+  background-color: transparent;
+}
+
+.dark .material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 20
+}
+
+.light .material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 20
+}
+
+/* other top bar styles */
+.top__bar,
+.top__box {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.top__bar {
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+
+  height: 32px;
+
+  padding: 0 2%;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.top__text {
+  margin: 0;
+  margin-left: 8px;
+  padding: 0;
+
+  font-weight: 600;
+  font-size: 14px;
+
+  cursor: default;
+}
+
+button.material-symbols-outlined:hover,
+button.material-symbols-outlined:focus {
+  font-variation-settings:
+    'opsz' 24
+}
+
+/* user output styles */
+.numbers__container {
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.numbers__top,
+.numbers__bot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+
+  width: 100%;
+}
+
+.numbers__top {
+  height: 40px;
+
+  padding: 0 4%;
+}
+
+.numbers__bot {
+  height: 80px;
+}
+
+.numbers__top-text {
+  margin: 0;
+  padding: 0;
+
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--up-numbers-color);
+}
+
+.numbers__bot-text {
+  padding: 0 3%;
+
+  width: 100%;
+
+  text-align: end;
+  font-weight: 400;
+  font-size: 44px;
+  color: var(--fonst-color);
+
+  background: transparent;
+
+  border-radius: 4px;
+}
+
+/* buttons styles */
+.buttons__container {
+  grid-row: 3 / 4;
+  grid-column: 1 / 2;
+
+  display: grid;
+  grid-template: repeat(6, 1fr) / repeat(4, 1fr);
+
+  padding: 1%;
+
+  gap: 4px;
+}
+
+.btn-app {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--fonst-color);
+
+  border-radius: 4px;
+
+  box-shadow: 0px 0px 1px var(--tablet-shadow);
+}
+
+.btn-app.funcs {
+  background-color: var(--funcs-bg);
+}
+
+.btn-app.funcs:hover,
+.btn-app.funcs:focus {
+  background-color: var(--funcs-bg-active);
+}
+
+.btn-app.funcs:active {
+  background-color: var(--funcs-bg);
+}
+
+.btn-app.number {
+  background-color: var(--numbs-bg);
+}
+
+.btn-app.number:hover,
+.btn-app.number:focus {
+  background-color: var(--numbs-bg-active);
+}
+
+.btn-app.number:active {
+  background-color: var(--numbs-bg);
+}
+
+.btn-app.equals {
+  color: var(--equals-font-col);
+  background-color: var(--equals);
+}
+
+.btn-app.equals:hover,
+.btn-app.equals:focus {
+  background-color: var(--equals-active);
+}
+
+.btn-app.equals:active {
+  background-color: var(--equals);
+}
