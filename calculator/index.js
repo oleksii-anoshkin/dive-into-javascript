@@ -321,87 +321,109 @@ function setTheme(color) {
   return color === "dark" ? "light" : "dark";
 }
 
+// get states
+function getResult() {
+  return document.querySelector(`.${RESULT_CLASS}`);
+}
+
+function getHistory() {
+  return document.querySelector(`.${HISTORY_CLASS}`);
+}
+
+function getHistoryArr() {
+  return document.querySelector(`.${HISTORY_CLASS}`).innerHTML.split(" ");
+}
+
 // calculator functions
 function addNumber(id) {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
-  const history = document.querySelector(`.${HISTORY_CLASS}`);
-  const historyArr = history.innerHTML.split(" ");
-  const number = String(history.innerHTML.match(/[-+]?[0-9]*\.?[0-9]+/));
+  const result = getResult();
+  const history = getHistory();
 
   switch (true) {
-    case result.innerHTML === "0" || result.innerHTML === number:
-      result.innerHTML = setString(id);
+    case result.innerHTML === "0":
+      setNumber(history, result, getNumber(id));
       break;
 
-    case history.innerHTML.includes("sqr") ||
-      history.innerHTML.includes("√") ||
-      history.innerHTML.includes("1/"):
-      result.innerHTML = setString(id);
-      history.innerHTML = "";
+    case result.innerHTML === getHistoryArr()[0]:
+      setNumber(history, result, getNumber(id));
       break;
 
-    case historyArr.length === 2 && historyArr[0] === result.innerHTML:
-      result.innerHTML = setString(id);
+    case history.innerHTML.includes("sqr"):
+      setNumber(history, result, getNumber(id), false, true);
+      break;
+
+    case history.innerHTML.includes("√"):
+      setNumber(history, result, getNumber(id), false, true);
+      break;
+
+    case history.innerHTML.includes("1/"):
+      setNumber(history, result, getNumber(id), false, true);
+      break;
+
+    case getHistoryArr().length === 2 &&
+      getHistoryArr()[0] === result.innerHTML:
+      setNumber(history, result, getNumber(id));
       break;
 
     default:
-      result.innerHTML += setString(id);
+      setNumber(history, result, getNumber(id), true);
       break;
   }
 }
 
+function setNumber(history, result, number, add, clear) {
+  add ? (result.innerHTML += number) : (result.innerHTML = number);
+  clear ? (history.innerHTML = "") : (history.innerHTML = history.innerHTML);
+}
+
 function clear() {
-  document.querySelector(`.${RESULT_CLASS}`).innerHTML = "0";
+  getResult().innerHTML = "0";
 }
 
 function deepClear() {
-  document.querySelector(`.${RESULT_CLASS}`).innerHTML = "0";
-  document.querySelector(`.${HISTORY_CLASS}`).innerHTML = "";
+  getResult().innerHTML = "0";
+  getHistory().innerHTML = "";
 }
 
 function deleteNumber() {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
+  const result = getResult();
   result.innerHTML = result.innerHTML.slice(0, result.innerHTML.length - 1);
 }
 
 function addPoint() {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
+  const result = getResult();
   if (!result.innerHTML.includes(".")) {
     result.innerHTML += ".";
   }
 }
 
 function modul() {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
+  const result = getResult();
   result.innerHTML = String(Number(result.innerHTML) * -1);
 }
 
 function percent() {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
+  const result = getResult();
   const newResult = String(Number(result.innerHTML) / 100);
   result.innerHTML = checkOutput(newResult);
-  document.querySelector(`.${HISTORY_CLASS}`).innerHTML = newResult;
+  getHistory().innerHTML = newResult;
 }
 
 function oneDivideX() {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
-  document.querySelector(
-    `.${HISTORY_CLASS}`
-  ).innerHTML = `1/ ( ${result.innerHTML} )`;
+  const result = getResult();
+  getHistory().innerHTML = `1/ ( ${result.innerHTML} )`;
   result.innerHTML = checkOutput(String(1 / Number(result.innerHTML)));
 }
 
 function sqr() {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
-  document.querySelector(
-    `.${HISTORY_CLASS}`
-  ).innerHTML = `sqr ( ${result.innerHTML} )`;
+  const result = getResult();
+  getHistory().innerHTML = `sqr ( ${result.innerHTML} )`;
   result.innerHTML = checkOutput(String(Math.pow(Number(result.innerHTML), 2)));
 }
 
 function radical() {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
-  const history = document.querySelector(`.${HISTORY_CLASS}`);
+  const result = getResult();
+  const history = getHistory();
 
   if (Number(result.innerHTML) > 0) {
     history.innerHTML = `√ ( ${result.innerHTML} )`;
@@ -415,30 +437,48 @@ function radical() {
 }
 
 function arithmeticFunc(id) {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
-  const history = document.querySelector(`.${HISTORY_CLASS}`);
-  const historyArr = history.innerHTML.split(" ");
-  let resultValue;
+  const result = getResult();
+  const history = getHistory();
 
   switch (true) {
-    case history.innerHTML.length === 0 ||
-      history.innerHTML.includes("=") ||
-      history.innerHTML.includes("sqr") ||
-      history.innerHTML.includes("√") ||
-      history.innerHTML.includes("1/") ||
-      Boolean(Number(history.innerHTML)):
-      history.innerHTML = `${result.innerHTML} ${setString(id)}`;
+    case history.innerHTML.length === 0:
+      setHistory(history, result, getSing(id));
       break;
 
-    case history.innerHTML.includes("+") ||
-      history.innerHTML.includes("-") ||
-      history.innerHTML.includes("÷") ||
-      history.innerHTML.includes("x"):
-      const secOperand = result.innerHTML;
-      resultValue = calcFunc(historyArr[1], historyArr[0], result.innerHTML);
-      history.innerHTML = `${resultValue} ${setString(id)}`;
-      result.innerHTML = checkOutput(resultValue);
-      logger(historyArr, "", secOperand, resultValue);
+    case Boolean(Number(history.innerHTML)):
+      setHistory(history, result, getSing(id));
+      break;
+
+    case history.innerHTML.includes("="):
+      setHistory(history, result, getSing(id));
+      break;
+
+    case history.innerHTML.includes("sqr"):
+      setHistory(history, result, getSing(id));
+      break;
+
+    case history.innerHTML.includes("√"):
+      setHistory(history, result, getSing(id));
+      break;
+
+    case history.innerHTML.includes("1/"):
+      setHistory(history, result, getSing(id));
+      break;
+
+    case history.innerHTML.includes("+"):
+      calculate(history, result, getSing(id));
+      break;
+
+    case history.innerHTML.includes("-"):
+      calculate(history, result, getSing(id));
+      break;
+
+    case history.innerHTML.includes("÷"):
+      calculate(history, result, getSing(id));
+      break;
+
+    case history.innerHTML.includes("x"):
+      calculate(history, result, getSing(id));
       break;
 
     default:
@@ -446,41 +486,79 @@ function arithmeticFunc(id) {
   }
 }
 
+function setHistory(history, result, operation) {
+  history.innerHTML = `${result.innerHTML} ${operation}`;
+}
+
+function calculate(history, result, operation) {
+  const secondOperand = result.innerHTML;
+  const resultValue = calcFunc(
+    getHistoryArr()[1],
+    getHistoryArr()[0],
+    result.innerHTML
+  );
+
+  operation
+    ? (history.innerHTML = `${resultValue} ${operation}`)
+    : (history.innerHTML = `${history.innerHTML} ${result.innerHTML} =`);
+
+  result.innerHTML = checkOutput(resultValue);
+  logger(getHistoryArr(), "", secondOperand, resultValue);
+}
+
 function equals() {
-  const result = document.querySelector(`.${RESULT_CLASS}`);
-  const history = document.querySelector(`.${HISTORY_CLASS}`);
-  const historyArr = history.innerHTML.split(" ");
-  let resultValue;
-  let secOperand;
+  const result = getResult();
+  const history = getHistory();
 
   switch (true) {
-    case history.innerHTML.length === 0 || history.innerHTML.includes("="):
-      history.innerHTML = `${result.innerHTML} =`;
-      logger([result.innerHTML], "", "", result.innerHTML);
+    case history.innerHTML.length === 0:
+      equalItself(history, result);
       break;
 
-    case history.innerHTML.includes("+") ||
-      history.innerHTML.includes("-") ||
-      history.innerHTML.includes("÷") ||
-      history.innerHTML.includes("x"):
-      secOperand = result.innerHTML;
-      resultValue = calcFunc(historyArr[1], historyArr[0], result.innerHTML);
-      history.innerHTML = `${historyArr.join(" ")} ${result.innerHTML} = `;
-      result.innerHTML = checkOutput(resultValue);
-      logger(historyArr, "", secOperand, resultValue);
+    case history.innerHTML.includes("="):
+      equalItself(history, result);
       break;
 
-    case history.innerHTML.includes("sqr") ||
-      history.innerHTML.includes("√") ||
-      history.innerHTML.includes("1/") ||
-      Boolean(Number(history.innerHTML)):
-      history.innerHTML = `${result.innerHTML} =`;
-      logger([result.innerHTML], "", "", result.innerHTML);
+    case history.innerHTML.includes("sqr"):
+      equalItself(history, result);
+      break;
+
+    case history.innerHTML.includes("√"):
+      equalItself(history, result);
+      break;
+
+    case history.innerHTML.includes("1/"):
+      equalItself(history, result);
+      break;
+
+    case Boolean(Number(history.innerHTML)):
+      equalItself(history, result);
+      break;
+
+    case history.innerHTML.includes("x"):
+      calculate(history, result);
+      break;
+
+    case history.innerHTML.includes("+"):
+      calculate(history, result);
+      break;
+
+    case history.innerHTML.includes("-"):
+      calculate(history, result);
+      break;
+
+    case history.innerHTML.includes("÷"):
+      calculate(history, result);
       break;
 
     default:
       break;
   }
+}
+
+function equalItself(history, result) {
+  history.innerHTML = `${result.innerHTML} =`;
+  logger([result.innerHTML], "", "", result.innerHTML);
 }
 
 function calcFunc(key, firstNumb, secondNumb) {
@@ -503,7 +581,7 @@ function calcFunc(key, firstNumb, secondNumb) {
 }
 
 // helper function
-function setString(id) {
+function getNumber(id) {
   switch (id) {
     case ID_KEYS.nine:
       return "9";
@@ -534,7 +612,11 @@ function setString(id) {
 
     case ID_KEYS.zero:
       return "0";
+  }
+}
 
+function getSing(id) {
+  switch (id) {
     case ID_KEYS.add:
       return "+";
 
@@ -558,13 +640,13 @@ function logger(history, firstOperand, secOperand, result) {
   const msg = `
     First operand: ${history[0] ? history[0] : firstOperand}
     Second operand: ${secOperand ? secOperand : ""}
-    Operation: ${history[1] ? setOperation(history[1]) : "equals"}
+    Operation: ${history[1] ? getOperation(history[1]) : "equals"}
     Result: ${result}
     `;
   console.log(msg);
 }
 
-function setOperation(key) {
+function getOperation(key) {
   switch (key) {
     case "+":
       return "add, '+'";
